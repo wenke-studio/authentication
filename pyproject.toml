@@ -1,0 +1,51 @@
+[tool.poetry]
+name = "authentication"
+version = "0.1.0"
+description = ""
+authors = ["wenke.lai <wenke.studio@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+# django and plugins
+django = "^5.0.6"
+django-environ = "^0.11.2"
+django-cors-headers = "^4.3.1"
+djangorestframework = "^3.15.1"
+drf-yasg = "^1.21.7"
+# others
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^8.24.0"
+# a python linter and code formatter
+ruff = "^0.4.4"
+# test tools
+pytest = "^8.2.1"
+pylint-django = "^2.5.5"
+faker = "^25.2.0"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "server.settings"
+python_files = ['tests.py', 'test_*.py']
+filterwarnings = [
+  # PEP 565 suggests that DeprecationWarnings shouldn't be ignored by default
+  # We should consider upgrade the related packages to fix the warnings
+  # For example: `google` package seems deprecate lots of APIs
+  "ignore::DeprecationWarning"
+]
+
+[tool.ruff]
+# Set the maximum line length to 119.
+line-length = 119
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "poetry"
+update_changelog_on_bump = true
+major_version_zero = false
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

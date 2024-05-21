@@ -1,0 +1,14 @@
+version: "3"
+services:
+  app:
+    container_name: app
+    image: app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    # volumes:
+    #   - .:/app
+    # environment:
+    #   name: value
