@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_yasg",
     # application
+    "user",
 ]
 
 MIDDLEWARE = [
@@ -91,6 +92,8 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+AUTH_USER_MODEL = "user.User"
 
 
 # Password validation
