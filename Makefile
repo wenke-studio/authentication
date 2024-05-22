@@ -1,8 +1,5 @@
 quick-start:
-	cp .env.example server/.env
-	python server/manage.py makemigrations
-	python server/manage.py migrate
-	python server/manage.py runserver
+	uvicorn server.main:app --reload
 
 
 requirements:
@@ -10,8 +7,5 @@ requirements:
 
 
 reset:
-	find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
-	find . -path "*/migrations/*.pyc"  -delete
-	rm -f server/db.sqlite3
-	python server/manage.py makemigrations
-	python server/manage.py migrate
+	rm -f db.sqlite3
+	uvicorn server.main:app --reload

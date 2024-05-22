@@ -7,17 +7,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-# django and plugins
-django = "^5.0.6"
-django-environ = "^0.11.2"
-django-cors-headers = "^4.3.1"
-djangorestframework = "^3.15.1"
-drf-yasg = "^1.21.7"
-# others
 fastapi = "^0.111.0"
-uvicorn = {extras = ["standard"], version = "^0.29.0"}
-sqlalchemy = "^2.0.30"
 pydantic = "^2.7.1"
+sqlalchemy = "^2.0.30"
+uvicorn = {extras = ["standard"], version = "^0.29.0"}
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.24.0"
@@ -25,11 +18,9 @@ ipython = "^8.24.0"
 ruff = "^0.4.4"
 # test tools
 pytest = "^8.2.1"
-pytest-django = "^4.8.0"
 faker = "^25.2.0"
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "server.settings"
 python_files = ['tests.py', 'test_*.py']
 filterwarnings = [
   # PEP 565 suggests that DeprecationWarnings shouldn't be ignored by default

@@ -1,7 +1,6 @@
 from .database import SessionLocal
 
 
-# Dependency
 def get_db():
     db = SessionLocal()
     try:

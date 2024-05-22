@@ -13,11 +13,6 @@ WORKDIR /app
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copy the default .env file into the container
-# fixme: delete me if system env is used
-COPY .env.example /app/server/.env
-
 COPY server ./server
 
-ENTRYPOINT [ "python", "/app/server/manage.py" ]
-CMD [ "runserver" ]
+ENTRYPOINT [ "uvicorn", "server.main:app", "--host", "0.0.0.0" ]
