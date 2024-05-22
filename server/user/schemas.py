@@ -14,7 +14,3 @@ class User(UserBase):
 
     class Config:
         orm_mode = True
-
-
-class HTTPError(BaseModel):
-    msg: str

@@ -1,8 +1,8 @@
 from fastapi import Depends, FastAPI
 
-from .core.database import migrate
-from .dependencies import debug
-from .routers import user
+from server.core.database import migrate
+from server.dependencies import debug
+from server.user import views as user
 
 # Create the database tables
 migrate()

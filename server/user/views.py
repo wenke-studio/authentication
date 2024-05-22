@@ -1,23 +1,25 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from .. import crud, schemas
-from ..dependencies import get_db
+from server.core.error import HTTPError
+from server.dependencies import get_db
+
+from . import controller, schemas
 
 router = APIRouter(prefix="/user/v1", tags=["User"])
 
 
 @router.post("/user", response_model=schemas.User, status_code=201)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_email(db, email=user.email)
+    db_user = controller.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    return crud.create_user(db=db, user=user)
+    return controller.create_user(db=db, user=user)
 
 
 @router.get("/user", response_model=list[schemas.User], status_code=200)
 def list_users(db: Session = Depends(get_db)):
-    return crud.get_users(db)
+    return controller.get_users(db)
 
 
 @router.get(
@@ -27,12 +29,12 @@ def list_users(db: Session = Depends(get_db)):
     responses={
         404: {
             "description": "User not found",
-            "model": schemas.HTTPError,
+            "model": HTTPError,
         }
     },
 )
 def get_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = crud.get_user(db, user_id)
+    db_user = controller.get_user(db, user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
