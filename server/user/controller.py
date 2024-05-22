@@ -23,3 +23,7 @@ def create_user(db: Session, user: UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def check_password(user: User, password: str):
+    return user.password == password + "notreallyhashed"
