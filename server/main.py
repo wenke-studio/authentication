@@ -1,10 +1,11 @@
 from fastapi import Depends, FastAPI
 
-from .database import Base, engine
+from .core.database import migrate
 from .dependencies import debug
 from .routers import user
 
-Base.metadata.create_all(bind=engine)
+# Create the database tables
+migrate()
 
 
 app = FastAPI(dependencies=[Depends(debug)])
