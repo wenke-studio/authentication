@@ -52,8 +52,8 @@ def login(credential: schemas.Credential, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials",
         )
-    return schemas.Token(
-        user={"id": user.id, "email": user.email},
-        access_token="access-token",
-        refresh_token="refresh-token",
-    )
+    return {
+        "user": {"id": user.id, "email": user.email},
+        "access_token": "access-token",
+        "refresh_token": "refresh-token",
+    }
