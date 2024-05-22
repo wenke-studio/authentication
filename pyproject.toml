@@ -21,7 +21,7 @@ ipython = "^8.24.0"
 ruff = "^0.4.4"
 # test tools
 pytest = "^8.2.1"
-pylint-django = "^2.5.5"
+pytest-django = "^4.8.0"
 faker = "^25.2.0"
 
 [tool.pytest.ini_options]
