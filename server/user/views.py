@@ -4,20 +4,24 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy.orm import Session
 
+from server.core.database import get_db
 from server.core.schemas import HTTPError, HTTPSuccess
-from server.dependencies import get_db
+from server.dependencies.oauth import get_current_user
 
-from . import schemas
-from .models import User
+from . import crud, schemas
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/user/v1", tags=["User"])
+router = APIRouter(
+    prefix="/user/v1",
+    tags=["User"],
+    dependencies=[Depends(get_current_user)],
+)
 
 
 @router.get("/user", response_model=list[schemas.User], status_code=200)
 def list_users(db: Session = Depends(get_db)):
-    users = User.objects.list(db)
+    users = crud.list_users(db)
     return users
 
 
@@ -34,7 +38,7 @@ def list_users(db: Session = Depends(get_db)):
 )
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     try:
-        user = User.objects.create(db, user)
+        user = crud.create_user(db, user)
         return user
     except IntegrityError as exc:
         logger.error(exc)
@@ -57,7 +61,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 )
 def retrieve_user(user_id: int, db: Session = Depends(get_db)):
     try:
-        user = User.objects.retrieve(db, user_id)
+        user = crud.retrieve_user(db, user_id)
         return user
     except NoResultFound as exc:
         logger.error(exc)
@@ -78,8 +82,8 @@ def retrieve_user(user_id: int, db: Session = Depends(get_db)):
         }
     },
 )
-def update_user(user_id: int, password: str, db: Session = Depends(get_db)):
-    affected_rows = User.objects.update(db, user_id, password)
+def update_user(user_id: int, body: schemas.UserUpdate, db: Session = Depends(get_db)):
+    affected_rows = crud.update_user(db, user_id, body.password)
     if affected_rows == 0:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -100,7 +104,7 @@ def update_user(user_id: int, password: str, db: Session = Depends(get_db)):
     },
 )
 def destroy_user(user_id: int, db: Session = Depends(get_db)):
-    affected_rows = User.objects.destroy(db, user_id)
+    affected_rows = crud.destroy_user(db, user_id)
     if affected_rows == 0:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
