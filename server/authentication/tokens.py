@@ -2,8 +2,10 @@ from datetime import datetime, timedelta, timezone
 
 import jwt
 from jwt.exceptions import InvalidTokenError
+from sqlalchemy.orm import Session
 
-from server.user import models
+from server.user.crud import get_user_by_email
+from server.user.models import User
 
 from .schemas import UserToken
 
@@ -50,10 +52,10 @@ def decode(token: str) -> tuple[dict, None] | tuple[None, str]:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload, None
     except InvalidTokenError:
-        return None, "Invalid token"
+        return None, "invalid token"
 
 
-def create_token_by_user(user: models.User) -> UserToken:
+def create_token_by_user(user: User) -> UserToken:
     access_token = encode({"email": user.email})
     refresh_token = encode({"email": user.email}, expires_delta=timedelta(days=1))
     return UserToken(
@@ -61,3 +63,13 @@ def create_token_by_user(user: models.User) -> UserToken:
         access_token=access_token,
         refresh_token=refresh_token,
     )
+
+
+def get_user_by_access_token(access_token: str, db: Session) -> tuple[User, None] | tuple[None, str]:
+    payload, err = decode(access_token)
+    if err:
+        return None, "invalid token"
+    user = get_user_by_email(db, payload.get("email"))
+    if user is None:
+        return None, "user not found"
+    return user, None
