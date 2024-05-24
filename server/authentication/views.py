@@ -1,5 +1,4 @@
 import logging
-from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -7,7 +6,7 @@ from sqlalchemy.orm import Session
 from server.core.schemas import HTTPError, HTTPSuccess
 from server.dependencies import get_db
 
-from . import controllers, schemas, token
+from . import controllers, schemas, tokens
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +37,7 @@ def register(credential: schemas.Credential, db: Session = Depends(get_db)):
 @router.post(
     "/login",
     status_code=status.HTTP_200_OK,
-    response_model=schemas.Token,
+    response_model=schemas.UserToken,
     responses={
         status.HTTP_401_UNAUTHORIZED: {
             "description": "Invalid credentials",
@@ -47,17 +46,11 @@ def register(credential: schemas.Credential, db: Session = Depends(get_db)):
     },
 )
 def login(credential: schemas.Credential, db: Session = Depends(get_db)):
-    user, err = controllers.login(db, credential)
+    user, err = controllers.authenticate_user(db, credential)
     if err is not None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials",
         )
-
-    access_token = token.encode({"email": user.email})
-    refresh_token = token.encode({"email": user.email}, expires_delta=timedelta(days=1))
-    return {
-        "user": {"id": user.id, "email": user.email},
-        "access_token": access_token,
-        "refresh_token": refresh_token,
-    }
+    user_token = tokens.create_token_by_user(user)
+    return user_token

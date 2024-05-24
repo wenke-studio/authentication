@@ -1,7 +1,7 @@
 import pytest
 from faker import Faker
 
-from . import token
+from . import tokens
 
 faker = Faker()
 
@@ -15,13 +15,13 @@ def user_data():
 
 
 def test_encode(user_data):
-    access_token = token.encode(user_data)
+    access_token = tokens.encode(user_data)
     assert access_token and isinstance(access_token, str)
 
 
 def test_decode(user_data):
-    access_token = token.encode(user_data)
+    access_token = tokens.encode(user_data)
 
-    payload, err = token.decode(access_token)
+    payload, err = tokens.decode(access_token)
     assert err is None
     assert payload and isinstance(payload, dict)

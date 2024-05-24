@@ -1,6 +1,6 @@
 import logging
 
-from sqlalchemy.exc import IntegrityError, NoResultFound
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from server.user import crud
@@ -10,7 +10,7 @@ from .schemas import Credential
 
 logger = logging.getLogger(__name__)
 
-ReturnType = tuple[User | None, str | None]
+ReturnType = tuple[User, None] | tuple[None, str]
 
 
 def register_user(db: Session, credential: Credential) -> ReturnType:
@@ -19,15 +19,14 @@ def register_user(db: Session, credential: Credential) -> ReturnType:
         return user, None
     except IntegrityError as exc:
         logger.error("error creating user, %s", str(exc))
-        return None, "The email has already been taken."
+        return None, "email conflict"
 
 
-def login(db: Session, credential: Credential) -> ReturnType:
-    try:
-        user = crud.get_user_by_email(db, credential.email)
-        if not crud.check_password(user, credential.password):
-            return None, "invalid password"
-        return user, None
-    except NoResultFound as exc:
-        logger.error("error logging in, %s", str(exc))
-        return None, "Invalid credentials."
+def authenticate_user(db: Session, credential: Credential) -> ReturnType:
+    user = crud.get_user_by_email(db, credential.email)
+    if not user:
+        return None, "user not found"
+    is_valid = crud.check_password(user, credential.password)
+    if not is_valid:
+        return user, "invalid password"
+    return user, None

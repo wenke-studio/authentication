@@ -1,9 +1,11 @@
 from datetime import datetime, timedelta, timezone
-from typing import Union
 
 import jwt
 from jwt.exceptions import InvalidTokenError
-from pydantic import BaseModel
+
+from server.user import models
+
+from .schemas import UserToken
 
 # ! fixme: Implement token encoding and decoding functions
 # get a string like this: openssl rand -hex 32
@@ -12,10 +14,6 @@ SECRET_KEY = "19f4169cdbfa57b2b47360d7b1a317705c29abc1ef8e7684b444de9a75bf0828"
 ALGORITHM = "HS256"
 
 DEFAULT_EXPIRE_MINUTES = 30
-
-
-class TokenData(BaseModel):
-    username: Union[str, None] = None
 
 
 def encode(data: dict, expires_delta: timedelta | None = None) -> str:
@@ -53,3 +51,13 @@ def decode(token: str) -> tuple[dict, None] | tuple[None, str]:
         return payload, None
     except InvalidTokenError:
         return None, "Invalid token"
+
+
+def create_token_by_user(user: models.User) -> UserToken:
+    access_token = encode({"email": user.email})
+    refresh_token = encode({"email": user.email}, expires_delta=timedelta(days=1))
+    return UserToken(
+        user=user,
+        access_token=access_token,
+        refresh_token=refresh_token,
+    )

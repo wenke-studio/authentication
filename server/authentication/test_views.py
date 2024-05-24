@@ -1,11 +1,11 @@
-import token
-
 import pytest
 from faker import Faker
 
 from server.conftest import TestingSessionLocal
 from server.user.crud import check_password
 from server.user.models import User
+
+from . import tokens
 
 faker = Faker()
 
@@ -38,5 +38,5 @@ def test_login(http, user_data):
     assert response.status_code == 200
 
     payload = response.json()
-    # assert token.decode(payload["access_token"])
-    # assert token.decode(payload["refresh_token"])
+    assert tokens.decode(payload["access_token"])
+    assert tokens.decode(payload["refresh_token"])

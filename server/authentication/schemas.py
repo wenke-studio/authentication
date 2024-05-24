@@ -16,7 +16,7 @@ class Credential(UserCreate):
     pass
 
 
-class Token(BaseModel):
+class UserToken(BaseModel):
     """Token schema
 
     Args:
