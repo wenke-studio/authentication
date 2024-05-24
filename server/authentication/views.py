@@ -1,4 +1,5 @@
 import logging
+from datetime import timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -6,7 +7,7 @@ from sqlalchemy.orm import Session
 from server.core.schemas import HTTPError, HTTPSuccess
 from server.dependencies import get_db
 
-from . import controllers, schemas
+from . import controllers, schemas, token
 
 logger = logging.getLogger(__name__)
 
@@ -52,8 +53,11 @@ def login(credential: schemas.Credential, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials",
         )
+
+    access_token = token.encode({"email": user.email})
+    refresh_token = token.encode({"email": user.email}, expires_delta=timedelta(days=1))
     return {
         "user": {"id": user.id, "email": user.email},
-        "access_token": "access-token",
-        "refresh_token": "refresh-token",
+        "access_token": access_token,
+        "refresh_token": refresh_token,
     }

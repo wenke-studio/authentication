@@ -18,7 +18,7 @@ def check_password(user: schemas.User, password: str) -> bool:
 
 
 def get_user_by_email(db: Session, email: str) -> User:
-    return db.Query(User).filter(User.email == email).one_or_none()
+    return db.query(User).filter(User.email == email).one_or_none()
 
 
 def list_users(db: Session):
