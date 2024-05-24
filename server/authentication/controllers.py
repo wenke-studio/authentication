@@ -26,7 +26,7 @@ def authenticate_user(db: Session, credential: Credential) -> ReturnType:
     user = crud.get_user_by_email(db, credential.email)
     if not user:
         return None, "user not found"
-    is_valid = crud.check_password(user, credential.password)
+    is_valid = crud.verify_password(user, credential.password)
     if not is_valid:
         return user, "invalid password"
     return user, None

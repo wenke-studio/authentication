@@ -2,7 +2,7 @@ import pytest
 from faker import Faker
 
 from server.conftest import TestingSessionLocal
-from server.user.crud import check_password
+from server.user.crud import verify_password
 from server.user.models import User
 
 from . import tokens
@@ -25,7 +25,7 @@ def test_register(http, user_data):
     db = TestingSessionLocal()
     user = db.query(User).filter(User.email == user_data["email"]).one_or_none()
     assert user
-    assert check_password(user, user_data["password"])
+    assert verify_password(user, user_data["password"])
 
 
 def test_login(http, user_data):

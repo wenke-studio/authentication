@@ -9,8 +9,7 @@ from server.user.models import User
 
 from .schemas import UserToken
 
-# ! fixme: Implement token encoding and decoding functions
-# get a string like this: openssl rand -hex 32
+# fixme: get secret key from environment variable
 SECRET_KEY = "19f4169cdbfa57b2b47360d7b1a317705c29abc1ef8e7684b444de9a75bf0828"
 
 ALGORITHM = "HS256"

@@ -4,7 +4,7 @@ from faker import Faker
 from server.authentication.tokens import create_token_by_user
 from server.conftest import TestingSessionLocal
 
-from .crud import check_password, create_user, get_user_by_email
+from .crud import create_user, get_user_by_email, verify_password
 from .schemas import UserCreate
 
 faker = Faker()
@@ -96,7 +96,7 @@ def test_update_user(http, user_data, admin_access_token):
     # Then the user should be updated in the database
     db = TestingSessionLocal()
     refreshed_user = get_user_by_email(db, user_data["email"])
-    assert check_password(refreshed_user, new_password)
+    assert verify_password(refreshed_user, new_password)
 
 
 def test_destroy_user(http, user_data, admin_access_token):
