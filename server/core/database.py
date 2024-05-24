@@ -16,3 +16,12 @@ Base = declarative_base()
 
 def migrate():
     Base.metadata.create_all(bind=engine)
+
+
+def get_db():
+    # a Dependency to inject the database session into the route
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

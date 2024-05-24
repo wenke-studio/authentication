@@ -4,8 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy.orm import Session
 
+from server.core.database import get_db
 from server.core.schemas import HTTPError, HTTPSuccess
-from server.dependencies import get_db
 
 from . import crud, schemas
 
