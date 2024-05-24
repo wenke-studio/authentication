@@ -7,10 +7,15 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+# api, validation and orm
 fastapi = "^0.111.0"
 pydantic = "^2.7.1"
 sqlalchemy = "^2.0.30"
+# jwt + crypto
+pyjwt = {extras = ["crypto"], version = "^2.8.0"}
+# web server
 uvicorn = {extras = ["standard"], version = "^0.29.0"}
+# other
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.24.0"
