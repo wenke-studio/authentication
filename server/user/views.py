@@ -6,12 +6,17 @@ from sqlalchemy.orm import Session
 
 from server.core.database import get_db
 from server.core.schemas import HTTPError, HTTPSuccess
+from server.dependencies.oauth import get_current_user
 
 from . import crud, schemas
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/user/v1", tags=["User"])
+router = APIRouter(
+    prefix="/user/v1",
+    tags=["User"],
+    dependencies=[Depends(get_current_user)],
+)
 
 
 @router.get("/user", response_model=list[schemas.User], status_code=200)
