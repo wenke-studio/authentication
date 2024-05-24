@@ -22,6 +22,16 @@ class UserCreate(UserBase):
     password: str
 
 
+class UserUpdate(BaseModel):
+    """Schema for updating a user
+
+    Args:
+        password (str): Password of the user
+    """
+
+    password: str | None
+
+
 class User(UserBase):
     """Schema for User
 

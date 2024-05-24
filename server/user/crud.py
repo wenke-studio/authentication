@@ -18,7 +18,7 @@ def check_password(user: schemas.User, password: str) -> bool:
 
 
 def get_user_by_email(db: Session, email: str) -> User:
-    return db.Query(User).filter(User.email == email).first()
+    return db.Query(User).filter(User.email == email).one_or_none()
 
 
 def list_users(db: Session):
@@ -34,7 +34,7 @@ def create_user(db: Session, user: schemas.UserCreate):
 
 
 def retrieve_user(db: Session, user_id: int):
-    return db.query(User).filter(User.id == user_id).one()
+    return db.query(User).filter(User.id == user_id).one_or_none()
 
 
 def update_user(db: Session, user_id: int, password: str):

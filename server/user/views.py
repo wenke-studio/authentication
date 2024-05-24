@@ -77,8 +77,8 @@ def retrieve_user(user_id: int, db: Session = Depends(get_db)):
         }
     },
 )
-def update_user(user_id: int, password: str, db: Session = Depends(get_db)):
-    affected_rows = crud.update_user(db, user_id, password)
+def update_user(user_id: int, body: schemas.UserUpdate, db: Session = Depends(get_db)):
+    affected_rows = crud.update_user(db, user_id, body.password)
     if affected_rows == 0:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
