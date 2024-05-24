@@ -17,15 +17,15 @@ def check_password(user: schemas.User, password: str) -> bool:
     return user.password == make_password(password)
 
 
-def get_user_by_email(db: Session, email: str) -> User:
+def get_user_by_email(db: Session, email: str) -> User | None:
     return db.query(User).filter(User.email == email).one_or_none()
 
 
-def list_users(db: Session):
+def list_users(db: Session) -> list[User]:
     return db.query(User).all()
 
 
-def create_user(db: Session, user: schemas.UserCreate):
+def create_user(db: Session, user: schemas.UserCreate) -> User:
     user = User(email=user.email, password=make_password(user.password))
     db.add(user)
     db.commit()
@@ -33,11 +33,11 @@ def create_user(db: Session, user: schemas.UserCreate):
     return user
 
 
-def retrieve_user(db: Session, user_id: int):
+def retrieve_user(db: Session, user_id: int) -> User | None:
     return db.query(User).filter(User.id == user_id).one_or_none()
 
 
-def update_user(db: Session, user_id: int, password: str):
+def update_user(db: Session, user_id: int, password: str) -> int:
     affected_rows = (
         db.query(User)
         .filter(User.id == user_id)
@@ -49,7 +49,7 @@ def update_user(db: Session, user_id: int, password: str):
     return affected_rows
 
 
-def destroy_user(db: Session, user_id: int):
+def destroy_user(db: Session, user_id: int) -> int:
     affected_rows = db.query(User).filter(User.id == user_id).delete()
     db.commit()
     return affected_rows
