@@ -4,11 +4,13 @@ from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
+from server.asset import views as asset
 from server.authentication import views as auth
 from server.authentication.controllers import authenticate_user
 from server.authentication.schemas import Credential
 from server.authentication.tokens import create_token_by_user
 from server.core.database import get_db, migrate
+from server.tag import views as tag
 from server.user import views as user
 
 # Create the database tables
@@ -18,6 +20,8 @@ migrate()
 app = FastAPI()
 app.include_router(user.router)
 app.include_router(auth.router)
+app.include_router(tag.router)
+app.include_router(asset.router)
 
 
 @app.post(
