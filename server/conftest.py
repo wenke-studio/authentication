@@ -53,6 +53,15 @@ def db_context():
 
 
 @pytest.fixture
+def db():
+    try:
+        db = TestingSessionLocal()
+        yield db
+    finally:
+        db.close()
+
+
+@pytest.fixture
 def http():
     # create a new http client for each test
     yield TestClient(app)

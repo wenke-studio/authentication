@@ -22,5 +22,5 @@ class Asset(Base):
         "Tag",
         secondary=asset_tag_relationship,
         back_populates="assets",
-        # lazy="dynamic",
+        lazy="dynamic",
     )
