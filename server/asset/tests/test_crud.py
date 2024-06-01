@@ -8,11 +8,11 @@ from server.asset import crud, models, schemas
 faker = Faker()
 
 
-def test_list_asset(db: Session):
+def test_list_assets(db: Session):
     data = {"name": faker.name(), "uri": faker.uri()}
     crud.create_asset(db, schemas.AssetCreate(**data))
 
-    assets = crud.list_asset(db)
+    assets = crud.list_assets(db)
     assert isinstance(assets, list)
     for asset in assets:
         assert isinstance(asset, models.Asset)

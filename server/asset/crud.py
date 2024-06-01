@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 
 
-def list_asset(db: Session) -> list[models.Asset]:
+def list_assets(db: Session) -> list[models.Asset]:
     """Return a list of all assets in the database
 
     Args:
